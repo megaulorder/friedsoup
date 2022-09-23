@@ -1,0 +1,29 @@
+<resources>
+	<string name="app_name">Fried Soup</string>
+
+	<string name="alert_channel_name">Alert channel</string>
+	<string name="alert_channel_description">Alert notification channel</string>
+
+	<string name="silent_channel_name">Alert channel</string>
+	<string name="silent_channel_description">Alert notification channel</string>
+
+	<string name="simple_notification">ヘッドアップ通知</string>
+	<string name="big_text_notification">大きな通知</string>
+	<string name="notification_with_image">画像付き通知</string>
+	<string name="silent_notification">サイレント通知</string>
+
+	<string name="simple_notification_title">Внимание!</string>
+	<string name="simple_notification_description">Спасибо за внимание</string>
+
+	<string name="big_text_notification_title"> Привет!</string>
+	<string name="big_text_notification_descriptiom">Сматри</string>
+
+	<string name="notification_with_image_title">ААААААА!</string>
+	<string name="notification_with_image_description">ааААААаааа</string>
+
+	<string name="silent_notification_title">Пук</string>
+	<string name="silent_notification_description">Среньк</string>
+
+	<string name="soup_title">揚げスープ</string>
+	<string name="soup_text">Мой батя ебашит вообще адовые блюда.\nНу такой вот примерно рецепт усредненный, потому что вариаций масса.\nБерется суп, он не греется, греть - это не про моего батю. Он берет это суп, вываливает его на сковороду и начинает жарить. Добавляет в него огромное количество лука, чеснока, перца черного и красного МУКИ! для вязкости, томатная паста сверху. Все это жарится до дыма. Потом снимается с огня и остужается на балконе. Потом батя заносит и щедро полив майонезом начинает есть. При этом ест со сковороды шкрябая по ней ложкой. Ест и приговаривает полушепотом ух бля. При этом у него на лбу аж пот выступает. Любезно мне иногда предлагает, но я отказываюсь. Надо ли говорить о том какой дичайший пердеж потом? Вонища такая, что обои от стен отклеиваются.</string>
+</resources>
