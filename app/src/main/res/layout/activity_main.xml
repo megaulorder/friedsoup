@@ -11,7 +11,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center"
-		android:layout_marginTop="50dp"
+		android:layout_marginTop="30dp"
 		android:text="@string/simple_notification"
 		/>
 
@@ -20,7 +20,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center"
-		android:layout_marginTop="50dp"
+		android:layout_marginTop="30dp"
 		android:text="@string/big_text_notification"
 		/>
 
@@ -29,7 +29,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center"
-		android:layout_marginTop="50dp"
+		android:layout_marginTop="30dp"
 		android:text="@string/notification_with_image"
 		/>
 
@@ -38,8 +38,77 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center"
-		android:layout_marginTop="50dp"
+		android:layout_marginTop="30dp"
 		android:text="@string/silent_notification"
 		/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:layout_marginTop="30dp"
+		android:text="@string/what"
+		/>
+
+	<TextView
+		android:id="@+id/textview"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:layout_marginTop="15dp"
+		android:textSize="40sp"
+		android:text="👻"
+		/>
+
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:layout_marginTop="15dp"
+		android:orientation="horizontal">
+
+		<Button
+			android:id="@+id/start"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/start"
+			android:layout_gravity="center_vertical"/>
+
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:layout_marginStart="30dp"
+			android:layout_marginEnd="30dp">
+
+			<Button
+				android:id="@+id/pumpkin"
+				android:tag="emoji"
+				android:layout_width="50dp"
+				android:layout_height="wrap_content"
+				android:text="🎃"/>
+			<Button
+				android:id="@+id/cat"
+				android:tag="emoji"
+				android:layout_width="50dp"
+				android:layout_height="wrap_content"
+				android:text="🐈‍⬛"/>
+			<Button
+				android:id="@+id/skull"
+				android:tag="emoji"
+				android:layout_width="50dp"
+				android:layout_height="wrap_content"
+				android:text="☠️"/>
+
+		</LinearLayout>
+
+		<Button
+			android:id="@+id/stop"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:text="@string/stop"/>
+
+	</LinearLayout>
 
 </LinearLayout>

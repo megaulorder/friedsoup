@@ -3,13 +3,15 @@ package com.megaulorder.friedsoup
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.TaskStackBuilder
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
@@ -25,31 +27,57 @@ private const val SILENT_NOTIFICATION_ID: Int = 4
 
 class MainActivity : AppCompatActivity() {
 
+	companion object {
+		const val CURRENT_EMOJI_EXTRA = "current_emoji"
+	}
+	private var myBinder: MyBinder? = null
+	private lateinit var serviceIntent: Intent
+
+	private var isServiceRunning = false
+	private var isServiceBound: Boolean = false
+
+	private val connection = object : ServiceConnection {
+
+		override fun onServiceConnected(className: ComponentName, service: IBinder) {
+			myBinder = service as MyBinder
+			isServiceBound = true
+		}
+
+		override fun onServiceDisconnected(arg0: ComponentName) {
+			isServiceBound = false
+		}
+	}
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_main)
 
 		val monkaImg: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.monka)
-		val simpleNotificationTitle: String = resources.getString(R.string.simple_notification_title)
-		val simpleNotificationDescription: String = resources.getString(R.string.simple_notification_description)
-		val bigTextNotificationTitle: String = resources.getString(R.string.big_text_notification_title)
-		val bigTextNotificationDescription: String = resources.getString(R.string.big_text_notification_descriptiom)
+		val simpleNotificationTitle: String =
+			resources.getString(R.string.simple_notification_title)
+		val simpleNotificationDescription: String =
+			resources.getString(R.string.simple_notification_description)
+		val bigTextNotificationTitle: String =
+			resources.getString(R.string.big_text_notification_title)
+		val bigTextNotificationDescription: String =
+			resources.getString(R.string.big_text_notification_descriptiom)
 		val soupText: String = resources.getString(R.string.soup_text)
-		val imageNotificationTitle: String = resources.getString(R.string.notification_with_image_title)
-		val imageNotificationDescription: String = resources.getString(R.string.notification_with_image_description)
-		val silentNotificationTitle: String = resources.getString(R.string.silent_notification_title)
-		val silentNotificationDescription: String = resources.getString(R.string.silent_notification_description)
+		val imageNotificationTitle: String =
+			resources.getString(R.string.notification_with_image_title)
+		val imageNotificationDescription: String =
+			resources.getString(R.string.notification_with_image_description)
+		val silentNotificationTitle: String =
+			resources.getString(R.string.silent_notification_title)
+		val silentNotificationDescription: String =
+			resources.getString(R.string.silent_notification_description)
 
 		createAlertNotificationChannel()
 		createSilentNotificationChannel()
 
 		val resultIntent = Intent(this, ResultActivity::class.java)
 
-		val pendingIntent: PendingIntent? = TaskStackBuilder.create(this).run {
-			addNextIntentWithParentStack(resultIntent)
-			getPendingIntent(0,
-				PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-		}
+		val pendingIntent: PendingIntent =
+			PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_IMMUTABLE)
 
 		val notificationSimple = NotificationCompat.Builder(this, ALERT_CHANNEL_ID)
 			.setSmallIcon(R.drawable.ic_attention)
@@ -123,6 +151,46 @@ class MainActivity : AppCompatActivity() {
 			with(NotificationManagerCompat.from(this)) {
 				notify(SILENT_NOTIFICATION_ID, silentNotification.build())
 			}
+		}
+
+		val controller = EmojiController(
+			widget = EmojiWidget(findViewById(R.id.textview)),
+			buttons = listOf(
+				findViewById(R.id.pumpkin),
+				findViewById(R.id.cat),
+				findViewById(R.id.skull),
+			)
+		)
+
+		serviceIntent = Intent(this, MyService::class.java)
+
+		findViewById<Button>(R.id.start).setOnClickListener {
+			if (!isServiceRunning) {
+				// кладем в интент емодзю чтобы засетать ее во вью нотифика
+				// на случай если до запуска сервиса она поменялась в активити
+				serviceIntent.putExtra(CURRENT_EMOJI_EXTRA, controller.currentEmoji.invoke())
+				bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE)
+				// подписываемся в сервисе на обновление емодзь из активити
+				// подписываемся в контроллере на обновление емодзь из сервиса
+				controller.setClickListeners { myBinder!!.updateEmoji(it) }
+				isServiceRunning = true
+			}
+		}
+
+		findViewById<Button>(R.id.stop).setOnClickListener {
+			if (isServiceRunning) {
+				unbindService(connection)
+				isServiceRunning = false
+			}
+		}
+	}
+
+	override fun onDestroy() {
+		super.onDestroy()
+
+		if (isServiceRunning) {
+			stopService(serviceIntent)
+			isServiceRunning = false
 		}
 	}
 

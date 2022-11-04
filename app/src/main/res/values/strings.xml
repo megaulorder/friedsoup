@@ -4,8 +4,11 @@
 	<string name="alert_channel_name">Alert channel</string>
 	<string name="alert_channel_description">Alert notification channel</string>
 
-	<string name="silent_channel_name">Alert channel</string>
-	<string name="silent_channel_description">Alert notification channel</string>
+	<string name="silent_channel_name">Silent channel</string>
+	<string name="silent_channel_description">Silent notification channel</string>
+
+	<string name="normal_channel_name">Normal channel</string>
+	<string name="normal_channel_description">Normal notification channel</string>
 
 	<string name="simple_notification">ヘッドアップ通知</string>
 	<string name="big_text_notification">大きな通知</string>
@@ -23,6 +26,10 @@
 
 	<string name="silent_notification_title">Пук</string>
 	<string name="silent_notification_description">Среньк</string>
+
+	<string name="what">今日は何ですか？</string>
+	<string name="start">スタート</string>
+	<string name="stop">ストップ</string>
 
 	<string name="soup_title">揚げスープ</string>
 	<string name="soup_text">Мой батя ебашит вообще адовые блюда.\nНу такой вот примерно рецепт усредненный, потому что вариаций масса.\nБерется суп, он не греется, греть - это не про моего батю. Он берет это суп, вываливает его на сковороду и начинает жарить. Добавляет в него огромное количество лука, чеснока, перца черного и красного МУКИ! для вязкости, томатная паста сверху. Все это жарится до дыма. Потом снимается с огня и остужается на балконе. Потом батя заносит и щедро полив майонезом начинает есть. При этом ест со сковороды шкрябая по ней ложкой. Ест и приговаривает полушепотом ух бля. При этом у него на лбу аж пот выступает. Любезно мне иногда предлагает, но я отказываюсь. Надо ли говорить о том какой дичайший пердеж потом? Вонища такая, что обои от стен отклеиваются.</string>
