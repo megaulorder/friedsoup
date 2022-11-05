@@ -30,16 +30,22 @@ class MainActivity : AppCompatActivity() {
 	companion object {
 		const val CURRENT_EMOJI_EXTRA = "current_emoji"
 	}
-	private var myBinder: MyBinder? = null
+
+	private var myService: MyService? = null
 	private lateinit var serviceIntent: Intent
 
 	private var isServiceRunning = false
 	private var isServiceBound: Boolean = false
 
+	private var controller: EmojiController? = null
+
 	private val connection = object : ServiceConnection {
 
 		override fun onServiceConnected(className: ComponentName, service: IBinder) {
-			myBinder = service as MyBinder
+			val binder = service as MyBinder
+			myService = binder.getService()
+			// подписываемся в контроллере на обновление емодзь из сервиса
+			myService!!.onClickListener = { controller!!.setEmoji(it) }
 			isServiceBound = true
 		}
 
@@ -153,12 +159,12 @@ class MainActivity : AppCompatActivity() {
 			}
 		}
 
-		val controller = EmojiController(
+		controller = EmojiController(
 			widget = EmojiWidget(findViewById(R.id.textview)),
 			buttons = listOf(
 				findViewById(R.id.pumpkin),
-				findViewById(R.id.cat),
-				findViewById(R.id.skull),
+				findViewById(R.id.flower),
+				findViewById(R.id.tree),
 			)
 		)
 
@@ -168,11 +174,11 @@ class MainActivity : AppCompatActivity() {
 			if (!isServiceRunning) {
 				// кладем в интент емодзю чтобы засетать ее во вью нотифика
 				// на случай если до запуска сервиса она поменялась в активити
-				serviceIntent.putExtra(CURRENT_EMOJI_EXTRA, controller.currentEmoji.invoke())
+				serviceIntent.putExtra(CURRENT_EMOJI_EXTRA, controller!!.currentEmoji.invoke())
+				startService(serviceIntent)
 				bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE)
 				// подписываемся в сервисе на обновление емодзь из активити
-				// подписываемся в контроллере на обновление емодзь из сервиса
-				controller.setClickListeners { myBinder!!.updateEmoji(it) }
+				controller!!.setClickListeners { myService!!.updateEmoji(it) }
 				isServiceRunning = true
 			}
 		}
@@ -180,6 +186,7 @@ class MainActivity : AppCompatActivity() {
 		findViewById<Button>(R.id.stop).setOnClickListener {
 			if (isServiceRunning) {
 				unbindService(connection)
+				stopService(serviceIntent)
 				isServiceRunning = false
 			}
 		}

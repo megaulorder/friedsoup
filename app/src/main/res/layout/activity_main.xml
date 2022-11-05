@@ -88,17 +88,17 @@
 				android:layout_height="wrap_content"
 				android:text="🎃"/>
 			<Button
-				android:id="@+id/cat"
+				android:id="@+id/flower"
 				android:tag="emoji"
 				android:layout_width="50dp"
 				android:layout_height="wrap_content"
-				android:text="🐈‍⬛"/>
+				android:text="🌸"/>
 			<Button
-				android:id="@+id/skull"
+				android:id="@+id/tree"
 				android:tag="emoji"
 				android:layout_width="50dp"
 				android:layout_height="wrap_content"
-				android:text="☠️"/>
+				android:text="🎄"/>
 
 		</LinearLayout>
 

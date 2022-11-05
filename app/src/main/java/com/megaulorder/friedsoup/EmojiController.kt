@@ -12,12 +12,16 @@ class EmojiController(
 		setClickListeners()
 	}
 
+	fun setEmoji(emoji: String) {
+		currentEmoji = { emoji }
+		widget.setEmoji(emoji)
+	}
+
 	fun setClickListeners(lambda: ((emoji: String) -> Unit)? = null) {
 		for (button in buttons) {
 			button.setOnClickListener {
 				val buttonEmoji = button.text.toString()
-				widget.setEmoji(buttonEmoji)
-				currentEmoji = { buttonEmoji }
+				setEmoji(buttonEmoji)
 				lambda?.invoke(buttonEmoji)
 			}
 		}

@@ -31,22 +31,22 @@
 		android:layout_gravity="center_horizontal">
 
 		<Button
-			android:id="@+id/pumpkin"
+			android:id="@+id/notification_pumpkin"
 			android:layout_width="50dp"
 			android:layout_height="wrap_content"
 			android:text="🎃"/>
 		<Button
-			android:id="@+id/cat"
+			android:id="@+id/notification_flower"
 			android:layout_width="50dp"
 			android:layout_marginStart="20dp"
 			android:layout_height="wrap_content"
-			android:text="🐈‍⬛"/>
+			android:text="‍🌸"/>
 		<Button
-			android:id="@+id/skull"
+			android:id="@+id/notification_tree"
 			android:layout_width="50dp"
 			android:layout_marginStart="20dp"
 			android:layout_height="wrap_content"
-			android:text="☠️"/>
+			android:text="🎄️"/>
 
 	</LinearLayout>
 

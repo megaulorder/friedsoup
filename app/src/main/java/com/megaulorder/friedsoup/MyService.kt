@@ -19,7 +19,10 @@ class MyService : Service() {
 
 	private val binder = MyBinder(this)
 
-	private var currentEmoji: () -> String = { "\uD83D\uDC7B" }
+	var currentEmoji: String = "\uD83D\uDC7B"
+
+	// листенер нажатия кнопки в нотификашке
+	var onClickListener: ((emoji: String) -> Unit)? = null
 
 	private var layout: RemoteViews? = null
 
@@ -30,16 +33,15 @@ class MyService : Service() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			createNotificationChannel()
 		}
+		layout = RemoteViews(packageName, R.layout.notification)
+		layout!!.setTextViewText(R.id.textview, emoji)
+		currentEmoji = emoji
 
 		val resultIntent = Intent(this, MainActivity::class.java)
 		pendingIntent =
 			PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_IMMUTABLE)
 
-		layout = RemoteViews(packageName, R.layout.notification)
-		layout!!.setTextViewText(R.id.textview, emoji)
-		currentEmoji = { emoji }
-
-		setButtonsIntent()
+		setOnClickPendingIntents()
 
 		return NotificationCompat.Builder(this, NORMAL_CHANNEL_ID)
 			.setSmallIcon(R.drawable.ic_emoji)
@@ -51,6 +53,11 @@ class MyService : Service() {
 			.setAutoCancel(false)
 			.setOnlyAlertOnce(true)
 			.build()
+	}
+
+	// дергается когда нажимаем на кнопку в нотификашке
+	fun setOnClickCallback(emoji: String) {
+		onClickListener?.invoke(emoji)
 	}
 
 	// обновляем нотифик с новой емоздей
@@ -74,41 +81,43 @@ class MyService : Service() {
 		notificationManager!!.createNotificationChannel(channel)
 	}
 
-	private fun setButtonsIntent() {
-		val emojis = Emoji.values()
-		for (emoji in emojis) {
+	// задаем кнопкам пендинг интенты на клик
+	private fun setOnClickPendingIntents(lambda: ((emoji: String) -> Unit)? = null) {
+		for (emoji in Emoji.values()) {
 			val buttonIntent = Intent(this, MyReceiver::class.java)
 			buttonIntent.action = emoji.text
 			val pendingIntent =
 				PendingIntent.getBroadcast(this, 0, buttonIntent, PendingIntent.FLAG_IMMUTABLE)
 			layout?.setOnClickPendingIntent(emoji.id, pendingIntent)
-			currentEmoji = { emoji.text }
+			val buttonEmoji: String = emoji.text
+			currentEmoji = buttonEmoji
+			lambda?.invoke(buttonEmoji)
 		}
 	}
 
 	override fun onBind(intent: Intent): IBinder {
 		val emoji: String? = intent.getStringExtra(MainActivity.CURRENT_EMOJI_EXTRA)
-		startForeground(SERVICE_NOTIFICATION_ID, buildNotification(emoji ?: currentEmoji.invoke()))
-		Toast.makeText(this, "Service bound $emoji", Toast.LENGTH_SHORT).show()
+		startForeground(SERVICE_NOTIFICATION_ID, buildNotification(emoji ?: currentEmoji))
+		Toast.makeText(this, "Service bound", Toast.LENGTH_SHORT).show()
 		return binder
 	}
 
 	override fun onUnbind(intent: Intent?): Boolean {
-		Toast.makeText(this, "Service unbound ${currentEmoji.invoke()}", Toast.LENGTH_SHORT).show()
+		Toast.makeText(this, "Service unbound", Toast.LENGTH_SHORT).show()
 		return super.onUnbind(intent)
 	}
 }
 
 class MyBinder(private val service: MyService) : Binder() {
 
-	fun updateEmoji(emoji: String) = service.updateEmoji(emoji)
+	fun getService(): MyService = service
 }
 
 enum class Emoji(
 	@IdRes val id: Int,
 	val text: String,
 ) {
-	PUMPKIN(R.id.pumpkin, "\uD83C\uDF83"),
-	CAT(R.id.cat, "\uD83D\uDC08\u200D⬛"),
-	SKULL(R.id.skull, "☠️")
+	PUMPKIN(R.id.notification_pumpkin, "\uD83C\uDF83"),
+	FLOWER(R.id.notification_flower, "\uD83C\uDF38"),
+	TREE(R.id.notification_tree, "\uD83C\uDF84")
 }
