@@ -35,7 +35,6 @@ class MainActivity : AppCompatActivity() {
 	private lateinit var serviceIntent: Intent
 
 	private var isServiceRunning = false
-	private var isServiceBound: Boolean = false
 
 	private var controller: EmojiController? = null
 
@@ -46,12 +45,9 @@ class MainActivity : AppCompatActivity() {
 			myService = binder.getService()
 			// подписываемся в контроллере на обновление емодзь из сервиса
 			myService!!.onClickListener = { controller!!.setEmoji(it) }
-			isServiceBound = true
 		}
 
-		override fun onServiceDisconnected(arg0: ComponentName) {
-			isServiceBound = false
-		}
+		override fun onServiceDisconnected(arg0: ComponentName) {}
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {

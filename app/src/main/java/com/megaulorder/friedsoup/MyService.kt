@@ -7,7 +7,6 @@ import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.widget.RemoteViews
-import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
@@ -18,6 +17,7 @@ private const val SERVICE_NOTIFICATION_ID: Int = 5
 class MyService : Service() {
 
 	private val binder = MyBinder(this)
+	private var isBound = false
 
 	var currentEmoji: String = "\uD83D\uDC7B"
 
@@ -62,7 +62,9 @@ class MyService : Service() {
 
 	// обновляем нотифик с новой емоздей
 	fun updateEmoji(emoji: String) {
-		notificationManager?.notify(SERVICE_NOTIFICATION_ID, buildNotification(emoji))
+		if (isBound) {
+			notificationManager?.notify(SERVICE_NOTIFICATION_ID, buildNotification(emoji))
+		}
 	}
 
 	@RequiresApi(Build.VERSION_CODES.O)
@@ -98,12 +100,12 @@ class MyService : Service() {
 	override fun onBind(intent: Intent): IBinder {
 		val emoji: String? = intent.getStringExtra(MainActivity.CURRENT_EMOJI_EXTRA)
 		startForeground(SERVICE_NOTIFICATION_ID, buildNotification(emoji ?: currentEmoji))
-		Toast.makeText(this, "Service bound", Toast.LENGTH_SHORT).show()
+		isBound = true
 		return binder
 	}
 
 	override fun onUnbind(intent: Intent?): Boolean {
-		Toast.makeText(this, "Service unbound", Toast.LENGTH_SHORT).show()
+		isBound = false
 		return super.onUnbind(intent)
 	}
 }
